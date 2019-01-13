@@ -16,7 +16,7 @@ class APIServer {
         this.initExpress();
         this.initExpressMiddleWare();
         this.getInfo();
-        // this.initControllers();
+        this.initControllers();
         this.start();
     }
 
@@ -43,17 +43,24 @@ class APIServer {
             res.json({
                 endpoints: [
                     {
-                        "/requestValidation/": {
+                        "/requestValidation": {
                             method: "POST",
                             description: "Validate an address",
                             payload: "{\"address\": \"address_goes_here\"}"
                         }
                     },
                     {
-                        "/message-signature/validate/": {
+                        "/message-signature/validate": {
                             method: "POST",
                             description: "",
                             payload: "address and signature in body"
+                        }
+                    },
+                    {
+                        "/block": {
+                            method: "POST",
+                            description: "Add a new block to the blockchain .",
+                            payload: "Takes a json object {'address': 'adress_here', 'star': { 'dec': '', 'ra': '', 'story': ''}."
                         }
                     },
                     {
@@ -71,10 +78,10 @@ class APIServer {
     /**
      * Initilization of all the controllers
      */
-    // initControllers() {
-    //     require("./controllers/BlockChainController.js")(this.app);
-    //     require("./controllers/ErrorController.js")(this.app);
-    // }
+    initControllers() {
+        require("./controllers/ValidationController.js")(this.app);
+        require("./controllers/BlockChainController.js")(this.app);
+    }
 
     /**
      * Starting the REST Api application
