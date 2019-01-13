@@ -45,7 +45,8 @@ class APIServer {
                     {
                         "/requestValidation/": {
                             method: "POST",
-                            description: ""
+                            description: "Validate an address",
+                            payload: "{\"address\": \"address_goes_here\"}"
                         }
                     },
                     {
