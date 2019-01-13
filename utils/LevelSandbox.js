@@ -57,6 +57,27 @@ class LevelSandbox {
         });
         return await promise;
     }
+
+    // Get block by hash
+    async getBlockByHash(hash) {
+        let self = this;
+        let block = null;
+        let promise = new Promise(function(resolve, reject){
+            self.db.createReadStream()
+                .on('data', function (data) {
+                    if(data.hash === hash){
+                        block = data;
+                    }
+                })
+                .on('error', function (err) {
+                    reject(err)
+                })
+                .on('close', function () {
+                    resolve(block);
+                });
+        });
+        return await promise;
+    }
         
 
 }
