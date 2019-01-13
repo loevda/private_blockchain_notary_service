@@ -9,9 +9,10 @@ To setup the project for review do the following:
 
 ## Endpoints
 
-| endpoint             | method | description                                     | 
-|----------------------|--------|-------------------------------------------------|
-| /                    | GET    | List of available endpoints                     |
-| /block/[blockheight] | GET    | Return block at height of {number} blockheight. |
-| /block               | POST   | Add a new block to the blockchain. Payload takes either an url-encoded key/value pair (body=value) or a json object {'body': 'value'}.       |     
+| endpoint                    | method | description                                                          | 
+|-----------------------------|--------|----------------------------------------------------------------------|
+| /                           | GET    | List of available endpoints                                          |
+| /requestValidation          | POST   | Request a validation                                                 |
+| /message-signature/validate | POST   | Process a validation. Payload takes an address and signature in body |  
+| /stars/[hash]               | GET    | Get the star block with an hash of {hash}                            |
 
