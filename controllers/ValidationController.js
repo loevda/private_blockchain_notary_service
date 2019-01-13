@@ -2,8 +2,9 @@ const { body, validationResult } = require('express-validator/check');
 const SHA256 = require('crypto-js/sha256');
 
 class ValidationController {
-    constructor(app) {
+    constructor(app, mempool) {
         this.app = app;
+        this.mempool = mempool;
         this.requestValidation();
         this.validate();
     }
@@ -17,7 +18,8 @@ class ValidationController {
             if (!errors.isEmpty()) {
                 return res.status(422).json({ errors: errors.array() });
             }
-            res.json({"res": "endpoint available"});
+            this.mempool.push(req.body.address);
+            res.json({"mempool": this.mempool});
         });
     }
 
@@ -38,4 +40,4 @@ class ValidationController {
 
 }
 
-module.exports = (app) => { return new ValidationController(app);}
+module.exports = (app, mempool) => { return new ValidationController(app, mempool);}

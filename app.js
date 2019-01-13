@@ -13,6 +13,8 @@ class APIServer {
      */
     constructor() {
         this.app = express();
+        this.mempool = [];
+        this.timeoutRequests = [];
         this.initExpress();
         this.initExpressMiddleWare();
         this.getInfo();
@@ -79,7 +81,7 @@ class APIServer {
      * Initilization of all the controllers
      */
     initControllers() {
-        require("./controllers/ValidationController.js")(this.app);
+        require("./controllers/ValidationController.js")(this.app, this.mempool);
         require("./controllers/BlockChainController.js")(this.app);
     }
 
