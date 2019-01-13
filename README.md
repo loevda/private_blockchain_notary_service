@@ -9,10 +9,10 @@ To setup the project do the following:
 
 ## Endpoints
 
-| endpoint                    | method | description                                                          | 
-|-----------------------------|--------|----------------------------------------------------------------------|
-| /                           | GET    | List of available endpoints                                          |
-| /requestValidation          | POST   | Request a validation                                                 |
-| /message-signature/validate | POST   | Process a validation. Payload takes an address and signature in body |  
-| /stars/[hash]               | GET    | Get the star block with an hash of {hash}                            |
+| endpoint                    | method | description                                                           | 
+|-----------------------------|--------|-----------------------------------------------------------------------|
+| /                           | GET    | List of available endpoints                                           |
+| /requestValidation          | POST   | Request a validation. Payload takes an address                        |
+| /message-signature/validate | POST   | Process a validation. Payload takes an address and signature in body  |  
+| /stars/[hash]               | GET    | Get the star block with an hash of {hash}                             |
 
