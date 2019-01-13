@@ -1,6 +1,6 @@
 # Private Blockchain Notary Service
 
-## Setup project for Review.
+## Setup project
 
 To setup the project for review do the following:
 1. Clone the project.
