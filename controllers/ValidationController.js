@@ -18,8 +18,7 @@ class ValidationController {
             if (!errors.isEmpty()) {
                 return res.status(422).json({ errors: errors.array() });
             }
-            this.mempool.push(req.body.address);
-            res.json({"mempool": this.mempool});
+            res.json(this.mempool.addRequestValidation(req.body.address));
         });
     }
 

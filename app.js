@@ -2,6 +2,7 @@
 const express = require("express");
 //Importing BodyParser.js module
 const bodyParser = require("body-parser");
+const Mempool = require('./utils/Mempool');
 
 /**
  * Class Definition for the REST API
@@ -13,7 +14,7 @@ class APIServer {
      */
     constructor() {
         this.app = express();
-        this.mempool = [];
+        this.mempool = new Mempool();
         this.timeoutRequests = [];
         this.initExpress();
         this.initExpressMiddleWare();
@@ -62,7 +63,7 @@ class APIServer {
                         "/block": {
                             method: "POST",
                             description: "Add a new block to the blockchain .",
-                            payload: "Takes a json object {'address': 'adress_here', 'star': { 'dec': '', 'ra': '', 'story': ''}."
+                            payload: "Takes a json object {'address': 'adress_here', 'star': { 'dec': 'dec_goes_here', 'ra': 'ra_goes_here', 'story': 'story_goes_here'}."
                         }
                     },
                     {
