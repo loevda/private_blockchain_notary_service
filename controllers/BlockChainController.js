@@ -4,8 +4,9 @@ const BlockChainClass = require('../models/BlockChain');
 const Block = require('../models/Block');
 
 class BlockChainController {
-    constructor(app) {
+    constructor(app, mempool) {
         this.app = app;
+        this.mempool = mempool;
         this.chain = new BlockChainClass();
         this.getBlock();
         this.postBlock();
@@ -27,8 +28,12 @@ class BlockChainController {
             // value must exist
             body('address', 'Missing payload {address}.').exists(),
             body('address', '{address} must be a string.').isString(),
-            // value must be an email
-            body('star', 'Missing payload {star}.').exists(),
+            body('dec', 'Missing payload {dec}.').exists(),
+            body('dec', '{dec} must be a string.').isString(),
+            body('ra', 'Missing payload {ra}.').exists(),
+            body('ra', '{ra} must be a string.').isString(),
+            body('story', 'Missing payload {story}.').exists(),
+            body('story', '{story} must be a string.').isString()
             // value must be at least 3 chars long
         ], async (req, res, next) => {
             const errors = validationResult(req);
@@ -36,9 +41,22 @@ class BlockChainController {
                 return res.status(422).json({ errors: errors.array() });
             } else {
                 try {
-                    const block = new Block(req.body);
-                    let result = await this.chain.addBlock(block);
-                    res.json(JSON.parse(result));
+                    //check if valid first with mempool
+                        let isValid = await this.mempool.verifyAddressRequest(req.body.address);
+                        if (isValid) {
+                            //then post to the blockchain
+                            const body = {
+                                address: req.body.address,
+                                star: {
+                                    dec: req.body.dec,
+                                    ra: req.body.ra,
+                                    story: Buffer(req.body.story).toString('hex')
+                                }
+                            }
+                            const block = new Block(body);
+                            let result = await this.chain.addBlock(block);
+                            res.json(JSON.parse(result));
+                        }
                 } catch(err) {
                     res.json({"error": err.toString()});
                 }
@@ -47,4 +65,4 @@ class BlockChainController {
     }
 }
 
-module.exports = (app) => { return new BlockChainController(app);}
+module.exports = (app, mempool) => { return new BlockChainController(app, mempool);}

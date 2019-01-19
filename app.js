@@ -49,21 +49,21 @@ class APIServer {
                         "/requestValidation": {
                             method: "POST",
                             description: "Validate an address",
-                            payload: "{\"address\": \"address_goes_here\"}"
+                            payload: {"address": "address_goes_here"}
                         }
                     },
                     {
                         "/message-signature/validate": {
                             method: "POST",
                             description: "",
-                            payload: "address and signature in body"
+                            payload: {"address": "address_goes_here", "signature": "signature goes here"}
                         }
                     },
                     {
                         "/block": {
                             method: "POST",
                             description: "Add a new block to the blockchain .",
-                            payload: "Takes a json object {'address': 'adress_here', 'star': { 'dec': 'dec_goes_here', 'ra': 'ra_goes_here', 'story': 'story_goes_here'}."
+                            payload: {"address": "adress_here", "star": { "dec": "dec_goes_here", "ra": "ra_goes_here", "story": "story_goes_here"}}
                         }
                     },
                     {
@@ -82,8 +82,8 @@ class APIServer {
      * Initilization of all the controllers
      */
     initControllers() {
-        require("./controllers/ValidationController.js")(this.app, this.mempool);
-        require("./controllers/BlockChainController.js")(this.app);
+        require("./controllers/MempoolController.js")(this.app, this.mempool);
+        require("./controllers/BlockChainController.js")(this.app, this.mempool);
     }
 
     /**
