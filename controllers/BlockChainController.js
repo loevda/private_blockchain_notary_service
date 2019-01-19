@@ -2,6 +2,7 @@ const { body, validationResult } = require('express-validator/check');
 const SHA256 = require('crypto-js/sha256');
 const BlockChainClass = require('../models/BlockChain');
 const Block = require('../models/Block');
+const hex2ascii = require('hex2ascii');
 
 class BlockChainController {
     constructor(app, mempool) {
@@ -55,6 +56,7 @@ class BlockChainController {
                             }
                             const block = new Block(body);
                             let result = await this.chain.addBlock(block);
+                            result.body.star.storyDecoded = hex2ascii(result.body.star.story);
                             res.json(JSON.parse(result));
                         }
                 } catch(err) {
