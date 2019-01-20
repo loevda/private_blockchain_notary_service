@@ -67,10 +67,24 @@ class APIServer {
                         }
                     },
                     {
-                        "/stars/[hash]": {
+                        "/stars/hash/[hash]": {
                             method: "GET",
                             param: "{hash} hash of the star block",
                             description: "Return the star block with hash of {hash} as a JSON object."
+                        }
+                    },
+                    {
+                        "/stars/address/[address]": {
+                            method: "GET",
+                            param: "{address} address of the star block",
+                            description: "Return the star block with address of {address} as a JSON object."
+                        }
+                    },
+                    {
+                        "/stars/height/[height]": {
+                            method: "GET",
+                            param: "{height} height of the star block",
+                            description: "Return the star block with height of {height} as a JSON object."
                         }
                     },
                 ]
