@@ -3,7 +3,7 @@
 |  ================================================*/
 
 const SHA256 = require('crypto-js/sha256');
-const LevelSandbox = require('../utils/LevelSandbox.js');
+const LevelSandbox = require('./LevelSandbox.js');
 const Block = require('./Block.js');
 
 class Blockchain {

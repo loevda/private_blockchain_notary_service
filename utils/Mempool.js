@@ -49,7 +49,7 @@ class Mempool {
             this._removeValidationRequest(walletAddress, this.timeoutRequests);
             return respObj;
         }else{
-            throw new MempoolError("Not authorized", "401");
+            throw new MempoolError("Not authorized", 401);
         }
 
     }

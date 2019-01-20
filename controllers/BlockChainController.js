@@ -1,8 +1,9 @@
 const { body, validationResult } = require('express-validator/check');
 const SHA256 = require('crypto-js/sha256');
-const BlockChainClass = require('../models/BlockChain');
-const Block = require('../models/Block');
+const BlockChainClass = require('../utils/BlockChain');
+const Block = require('../utils/Block');
 const hex2ascii = require('hex2ascii');
+const MempoolError = require('../utils/MemPoolError')
 
 class BlockChainController {
     constructor(app, mempool) {
@@ -86,6 +87,8 @@ class BlockChainController {
                             result.body.star.storyDecoded = hex2ascii(result.body.star.story);
                             await this.mempool.removeStarFromPool(req.body.address);
                             res.json(JSON.parse(result));
+                        }else{
+                            throw new MempoolError("Unauthorized", 401)
                         }
                 } catch(err) {
                     next(err);
