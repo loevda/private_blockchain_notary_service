@@ -15,7 +15,6 @@ class APIServer {
     constructor() {
         this.app = express();
         this.mempool = new Mempool();
-        this.timeoutRequests = [];
         this.initExpress();
         this.initExpressMiddleWare();
         this.getInfo();

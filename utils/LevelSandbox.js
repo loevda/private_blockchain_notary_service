@@ -83,19 +83,20 @@ class LevelSandbox {
     async getBlockByWalletAddress(walletAddress) {
         let self = this;
         let block = null;
+        let blocks = [];
         let promise = new Promise(function(resolve, reject){
             self.db.createReadStream()
                 .on('data', function (data) {
                     let o = JSON.parse(data.value);
                     if(o.body && (o.body.address === walletAddress)){
-                        block = o;
+                        blocks.push(o);
                     }
                 })
                 .on('error', function (err) {
                     reject(err)
                 })
                 .on('close', function () {
-                    resolve(block);
+                    resolve(blocks);
                 });
         });
         return await promise;

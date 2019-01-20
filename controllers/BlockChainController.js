@@ -11,7 +11,7 @@ class BlockChainController {
         this.mempool = mempool;
         this.chain = new BlockChainClass();
         this.getBlockByHash();
-        this.getBlockByAddress();
+        this.getBlocksByAddress();
         this.getBlockByHeight();
         this.postBlock();
     }
@@ -40,12 +40,15 @@ class BlockChainController {
         });
     }
 
-    getBlockByAddress() {
+    getBlocksByAddress() {
         this.app.get("/stars/address/:address", async (req, res, next) => {
             try {
-                let block = await this.chain.getBlockByWalletAddress(req.params.address);
-                block.body.star.storyDecoded = hex2ascii(block.body.star.story);
-                res.json(block);
+                let blocks = await this.chain.getBlockByWalletAddress(req.params.address);
+                let stars = blocks.map((el) => {
+                    el.body.star.storyDecoded = hex2ascii(el.body.star.story);
+                    return el;
+                });
+                res.json(stars);
             } catch(err) {
                 next(err);
             }
@@ -57,12 +60,7 @@ class BlockChainController {
             // value must exist
             body('address', 'Missing payload {address}.').exists(),
             body('address', '{address} must be a string.').isString(),
-            body('dec', 'Missing payload {dec}.').exists(),
-            body('dec', '{dec} must be a string.').isString(),
-            body('ra', 'Missing payload {ra}.').exists(),
-            body('ra', '{ra} must be a string.').isString(),
-            body('story', 'Missing payload {story}.').exists(),
-            body('story', '{story} must be a string.').isString()
+            body('star', 'Missing payload {star}').exists(),
             // value must be at least 3 chars long
         ], async (req, res, next) => {
             const errors = validationResult(req);
@@ -74,14 +72,12 @@ class BlockChainController {
                         let isValid = await this.mempool.verifyAddressRequest(req.body.address);
                         if (isValid) {
                             //then post to the blockchain
+                            const star = JSON.parse(req.body.star);
+                            star.story = Buffer.from(star.story).toString('hex');
                             const body = {
                                 address: req.body.address,
-                                star: {
-                                    dec: req.body.dec,
-                                    ra: req.body.ra,
-                                    story: Buffer.from(req.body.story).toString('hex')
-                                }
-                            }
+                                star: {...star}
+                            };
                             const block = new Block(body);
                             let starBlock = await this.chain.addBlock(block);
                             let result = JSON.parse(starBlock);
