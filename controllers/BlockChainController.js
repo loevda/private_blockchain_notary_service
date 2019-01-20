@@ -79,13 +79,15 @@ class BlockChainController {
                                 star: {
                                     dec: req.body.dec,
                                     ra: req.body.ra,
-                                    story: Buffer(req.body.story).toString('hex')
+                                    story: Buffer.from(req.body.story).toString('hex')
                                 }
                             }
                             const block = new Block(body);
-                            let result = JSON.parse(await this.chain.addBlock(block));
+                            let starBlock = await this.chain.addBlock(block);
+                            let result = JSON.parse(starBlock);
                             result.body.star.storyDecoded = hex2ascii(result.body.star.story);
                             await this.mempool.removeStarFromPool(req.body.address);
+                            console.log(await this.mempool.pool);
                             res.json(result);
                         }else{
                             throw new MempoolError("Unauthorized", 401)

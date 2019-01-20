@@ -11,15 +11,17 @@ class Mempool {
     }
 
     addRequestValidation(walletAddress) {
+
         if (this.pool[walletAddress] !== undefined)
             throw new MempoolError("You already have a pending authorization " +
                 "to post a star in the mempool", 409);
+
         const self = this;
         const requestTimeStamp = new Date().getTime();
         if (this.timeoutRequests[walletAddress] === undefined) {
             this.timeoutRequests[walletAddress] = [requestTimeStamp,
-                this._setTimeout(walletAddress, this.timeoutRequestsWindowTime,
-                    this.timeoutRequests)];
+                setTimeout(function() { self._removeValidationRequest(walletAddress) },
+                    self.timeoutRequestsWindowTime)];
         }
         return {
             "walletAddress": walletAddress,
@@ -38,6 +40,8 @@ class Mempool {
             return obj;
         }
 
+        const self = this;
+
         let timeOutReq = this.timeoutRequests[walletAddress];
         let isValid = timeOutReq !== undefined && bitcoinMessage.verify(`${walletAddress}:${timeOutReq[0]}:starRegistry`, walletAddress, signature);
 
@@ -55,9 +59,10 @@ class Mempool {
                     "messageSignature": true
                 }
             }
-            this.pool[walletAddress] = [respObj, this._setTimeout(walletAddress,
-                this.timeoutValidWindowTime, this.pool)];
-            this._removeValidationRequest(walletAddress, this.timeoutRequests);
+            this.pool[walletAddress] = [respObj,
+                setTimeout(function() { self._removeValidRequest(walletAddress) },
+                    self.timeoutValidWindowTime)];
+            this._removeValidationRequest(walletAddress);
             return respObj;
         }else{
             throw new MempoolError("Not authorized", 401);
@@ -70,24 +75,24 @@ class Mempool {
     }
 
     removeStarFromPool(walletAddress) {
-        this._removeValidationRequest(walletAddress, this.pool);
+        this._removeValidRequest(walletAddress);
     }
 
     _calculateValidationWindow(requestTimeStamp, windowTime) {
         return (windowTime - (new Date().getTime() - requestTimeStamp));
     }
 
-    _setTimeout(walletAddress, windowTime, dict) {
-        const self = this;
-        dict[walletAddress]=
-            setTimeout(function(){ self._removeValidationRequest(walletAddress, dict) },
-                windowTime );
+
+    _removeValidRequest(walletAddress) {
+        this.pool = this.pool.filter((el) => {
+            return el !== walletAddress;
+        })
     }
 
-    _removeValidationRequest(walletAddress, dict) {
-        dict = dict.filter((el) => {
+    _removeValidationRequest(walletAddress) {
+        this.timeoutRequests = this.timeoutRequests.filter((el) => {
             return el !== walletAddress;
-        });
+        })
     }
 }
 
