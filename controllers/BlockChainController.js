@@ -19,6 +19,7 @@ class BlockChainController {
         this.app.get("/stars/height/:height", async (req, res) => {
             try {
                 let block = await this.chain.getBlock(req.params.height);
+                block.body.star.storyDecoded = hex2ascii(block.body.star.story);
                 res.json(block);
             } catch(err) {
                 res.json({"error": err.toString()});
