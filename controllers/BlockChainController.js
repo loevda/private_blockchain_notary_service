@@ -87,7 +87,6 @@ class BlockChainController {
                             let result = JSON.parse(starBlock);
                             result.body.star.storyDecoded = hex2ascii(result.body.star.story);
                             await this.mempool.removeStarFromPool(req.body.address);
-                            console.log(await this.mempool.pool);
                             res.json(result);
                         }else{
                             throw new MempoolError("Unauthorized", 401)

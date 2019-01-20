@@ -82,7 +82,6 @@ class Mempool {
         return (windowTime - (new Date().getTime() - requestTimeStamp));
     }
 
-
     _removeValidRequest(walletAddress) {
         this.pool = this.pool.filter((el) => {
             return el !== walletAddress;
