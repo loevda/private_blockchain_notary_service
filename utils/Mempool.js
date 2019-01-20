@@ -36,7 +36,7 @@ class Mempool {
         if (this.pool[walletAddress] !== undefined) {
             let obj = this.pool[walletAddress][0];
             obj.status.validationWindow = Math.round(this._calculateValidationWindow(
-                parseInt(obj.status.requestTimeStamp), this.timeoutValidWindowTime)/1000);
+                parseInt(obj.status.requestTimeStamp), this.timeoutRequestsWindowTime)/1000);
             return obj;
         }
 
@@ -47,8 +47,8 @@ class Mempool {
 
         if (isValid) {
             const requestTimeStamp = new Date().getTime();
-            const validationWindow = Math.round(this._calculateValidationWindow(requestTimeStamp,
-                    this.timeoutValidWindowTime)/1000);
+            const validationWindow = Math.round(this._calculateValidationWindow(timeOutReq[0],
+                    this.timeoutRequestsWindowTime)/1000);
             let respObj =  {
                 "registerStar": true,
                 "status": {

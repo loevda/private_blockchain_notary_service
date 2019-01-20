@@ -81,7 +81,7 @@ class APIServer {
                         }
                     },
                     {
-                        "/stars/height/[height]": {
+                        "/block/[height]": {
                             method: "GET",
                             param: "{height} height of the star block",
                             description: "Return the star block with height of {height} as a JSON object."

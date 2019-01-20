@@ -17,7 +17,7 @@ class BlockChainController {
     }
 
     getBlockByHeight() {
-        this.app.get("/stars/height/:height", async (req, res, next) => {
+        this.app.get("/block/:height", async (req, res, next) => {
             try {
                 let block = await this.chain.getBlock(req.params.height);
                 block.body.star.storyDecoded = hex2ascii(block.body.star.story);
