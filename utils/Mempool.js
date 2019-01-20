@@ -59,9 +59,8 @@ class Mempool {
     }
 
     removeStarFromPool(walletAddress) {
-        _removeValidationRequest(walletAddress, this.pool);
+        this._removeValidationRequest(walletAddress, this.pool);
     }
-
 
     _calculateValidationWindow(requestTimeStamp, windowTime) {
         return (windowTime - (new Date().getTime() - requestTimeStamp));
