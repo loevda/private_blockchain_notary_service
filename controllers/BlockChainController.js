@@ -16,37 +16,37 @@ class BlockChainController {
     }
 
     getBlockByHeight() {
-        this.app.get("/stars/height/:height", async (req, res) => {
+        this.app.get("/stars/height/:height", async (req, res, next) => {
             try {
                 let block = await this.chain.getBlock(req.params.height);
                 block.body.star.storyDecoded = hex2ascii(block.body.star.story);
                 res.json(block);
             } catch(err) {
-                res.json({"error": err.toString()});
+                next(err);
             }
         });
     }
 
     getBlockByHash() {
-        this.app.get("/stars/hash/:hash", async (req, res) => {
+        this.app.get("/stars/hash/:hash", async (req, res, next) => {
             try {
                 let block = await this.chain.getBlockByHash(req.params.hash);
                 block.body.star.storyDecoded = hex2ascii(block.body.star.story);
                 res.json(block);
             } catch(err) {
-                res.json({"error": err.toString()});
+                next(err);
             }
         });
     }
 
     getBlockByAddress() {
-        this.app.get("/stars/address/:address", async (req, res) => {
+        this.app.get("/stars/address/:address", async (req, res, next) => {
             try {
                 let block = await this.chain.getBlockByWalletAddress(req.params.address);
                 block.body.star.storyDecoded = hex2ascii(block.body.star.story);
                 res.json(block);
             } catch(err) {
-                res.json({"error": err.toString()});
+                next(err);
             }
         });
     }
@@ -87,7 +87,7 @@ class BlockChainController {
                             res.json(JSON.parse(result));
                         }
                 } catch(err) {
-                    res.json({"error": err.toString()});
+                    next(err);
                 }
             }
         });

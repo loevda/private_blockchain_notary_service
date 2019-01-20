@@ -98,6 +98,7 @@ class APIServer {
     initControllers() {
         require("./controllers/MempoolController.js")(this.app, this.mempool);
         require("./controllers/BlockChainController.js")(this.app, this.mempool);
+        require("./controllers/ErrorController.js")(this.app);
     }
 
     /**
