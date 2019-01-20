@@ -1,4 +1,5 @@
 const bitcoinMessage = require('bitcoinjs-message');
+const MempoolError = require('./MemPoolError');
 
 class Mempool {
 
@@ -25,9 +26,9 @@ class Mempool {
         }
     }
 
-    validateRequestByWallet(message, walletAddress, signature) {
-        let isValid = bitcoinMessage.verify(message, walletAddress, signature) &&
-            this.timeoutRequests[walletAddress] !== undefined;
+    validateRequestByWallet(walletAddress, signature) {
+        let timeOutReq = this.timeoutRequests[walletAddress];
+        let isValid = timeOutReq !== undefined && bitcoinMessage.verify(`${walletAddress}:${timeOutReq[0]}:starRegistry`, walletAddress, signature);
 
         if (isValid) {
             const requestTimeStamp = new Date().getTime();
@@ -48,7 +49,7 @@ class Mempool {
             this._removeValidationRequest(walletAddress, this.timeoutRequests);
             return respObj;
         }else{
-            return {"error": "Invalid request."};
+            throw new MempoolError("Not authorized", "401");
         }
 
     }
@@ -57,9 +58,10 @@ class Mempool {
         return this.pool[walletAddress] !== undefined;
     }
 
-    _removeRequestValidation() {
-
+    removeStarFromPool(walletAddress) {
+        _removeValidationRequest(walletAddress, this.pool);
     }
+
 
     _calculateValidationWindow(requestTimeStamp, windowTime) {
         return (windowTime - (new Date().getTime() - requestTimeStamp));
@@ -72,22 +74,11 @@ class Mempool {
                 windowTime );
     }
 
-    _verifyTimeLeft(walletAddress) {
-        //just check that it is still inside the timeoutRequests dict?
-        return this.timeoutRequests[walletAddress] !== undefined;
-    }
-
     _removeValidationRequest(walletAddress, dict) {
         dict = dict.filter((el) => {
             return el !== walletAddress;
         });
     }
-
-    // _removeValidationRequest(walletAddress) {
-    //     this.timeoutRequests = this.timeoutRequests.filter((el) => {
-    //         return el !== walletAddress;
-    //     });
-    // }
 }
 
 module.exports = Mempool;

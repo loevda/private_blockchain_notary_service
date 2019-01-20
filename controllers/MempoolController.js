@@ -39,7 +39,7 @@ class MempoolController {
                 return res.status(422).json({ errors: errors.array() });
             }
             try {
-                let result = await this.mempool.validateRequestByWallet(req.body.message,
+                let result = await this.mempool.validateRequestByWallet(
                     req.body.address, req.body.signature);
                 res.json(result);
             }catch(err){

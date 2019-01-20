@@ -83,7 +83,8 @@ class BlockChainController {
                             }
                             const block = new Block(body);
                             let result = await this.chain.addBlock(block);
-                            //result.body.star.storyDecoded = hex2ascii(result.body.star.story);
+                            result.body.star.storyDecoded = hex2ascii(result.body.star.story);
+                            await this.mempool.removeStarFromPool(req.body.address);
                             res.json(JSON.parse(result));
                         }
                 } catch(err) {
