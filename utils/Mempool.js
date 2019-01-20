@@ -30,6 +30,14 @@ class Mempool {
     }
 
     validateRequestByWallet(walletAddress, signature) {
+
+        if (this.pool[walletAddress] !== undefined) {
+            let obj = this.pool[walletAddress][0];
+            obj.status.validationWindow = Math.round(this._calculateValidationWindow(
+                parseInt(obj.status.requestTimeStamp), this.timeoutValidWindowTime)/1000);
+            return obj;
+        }
+
         let timeOutReq = this.timeoutRequests[walletAddress];
         let isValid = timeOutReq !== undefined && bitcoinMessage.verify(`${walletAddress}:${timeOutReq[0]}:starRegistry`, walletAddress, signature);
 
