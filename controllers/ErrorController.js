@@ -6,7 +6,7 @@ class ErrorController {
 
     constructor(app) {
         this.app = app;
-        // this.notFound();
+        this.notFound();
         this.catchErrors();
     }
 
