@@ -12,7 +12,7 @@ To setup the project do the following:
 | endpoint                    | method | description                                                                 | 
 |-----------------------------|--------|-----------------------------------------------------------------------------|
 | /                           | GET    | List of available endpoints                                                 |
-| /requestValidation          | POST   | Request a validation. Payload takes an address                              |
+| /requestValidation          | POST   | Request a validation. Payload takes an {address} in body                    |
 | /message-signature/validate | POST   | Process a validation. Payload takes an {address} and a {signature} in body  | 
 | /block                      | POST   | Add a star block. Payload takes an {address} and a {star} object.           |
 | /stars/hash/[hash]          | GET    | Get the star block with an hash of {hash}                                   |
