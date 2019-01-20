@@ -53,6 +53,14 @@ class Blockchain {
         return await this.bd.getLevelDBData(height);
     }
 
+    async getBlockByHash(hash) {
+        return await this.bd.getBlockByHash(hash);
+    }
+
+    async getBlockByWalletAddress(address) {
+        return await this.bd.getBlockByWalletAddress(address);
+    }
+
     // Validate if Block is being tampered by Block Height
     async validateBlock(height) {
         // Add your code here

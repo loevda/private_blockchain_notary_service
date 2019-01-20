@@ -9,14 +9,40 @@ class BlockChainController {
         this.app = app;
         this.mempool = mempool;
         this.chain = new BlockChainClass();
-        this.getBlock();
+        this.getBlockByHash();
+        this.getBlockByAddress();
+        this.getBlockByHeight();
         this.postBlock();
     }
 
-    getBlock() {
-        this.app.get("/stars/:hash", async (req, res) => {
+    getBlockByHeight() {
+        this.app.get("/stars/height/:height", async (req, res) => {
             try {
-                let block = await this.chain.getBlock(req.params.hash);
+                let block = await this.chain.getBlock(req.params.height);
+                res.json(block);
+            } catch(err) {
+                res.json({"error": err.toString()});
+            }
+        });
+    }
+
+    getBlockByHash() {
+        this.app.get("/stars/hash/:hash", async (req, res) => {
+            try {
+                let block = await this.chain.getBlockByHash(req.params.hash);
+                block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+                res.json(block);
+            } catch(err) {
+                res.json({"error": err.toString()});
+            }
+        });
+    }
+
+    getBlockByAddress() {
+        this.app.get("/stars/address/:address", async (req, res) => {
+            try {
+                let block = await this.chain.getBlockByWalletAddress(req.params.address);
+                block.body.star.storyDecoded = hex2ascii(block.body.star.story);
                 res.json(block);
             } catch(err) {
                 res.json({"error": err.toString()});
@@ -56,7 +82,7 @@ class BlockChainController {
                             }
                             const block = new Block(body);
                             let result = await this.chain.addBlock(block);
-                            result.body.star.storyDecoded = hex2ascii(result.body.star.story);
+                            //result.body.star.storyDecoded = hex2ascii(result.body.star.story);
                             res.json(JSON.parse(result));
                         }
                 } catch(err) {

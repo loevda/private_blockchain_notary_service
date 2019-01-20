@@ -65,8 +65,9 @@ class LevelSandbox {
         let promise = new Promise(function(resolve, reject){
             self.db.createReadStream()
                 .on('data', function (data) {
-                    if(data.hash === hash){
-                        block = data;
+                    let o = JSON.parse(data.value);
+                    if(o.hash === hash) {
+                        block = o;
                     }
                 })
                 .on('error', function (err) {
@@ -78,8 +79,27 @@ class LevelSandbox {
         });
         return await promise;
     }
-        
 
+    async getBlockByWalletAddress(walletAddress) {
+        let self = this;
+        let block = null;
+        let promise = new Promise(function(resolve, reject){
+            self.db.createReadStream()
+                .on('data', function (data) {
+                    let o = JSON.parse(data.value);
+                    if(o.body && (o.body.address === walletAddress)){
+                        block = o;
+                    }
+                })
+                .on('error', function (err) {
+                    reject(err)
+                })
+                .on('close', function () {
+                    resolve(block);
+                });
+        });
+        return await promise;
+    }
 }
 
 module.exports = LevelSandbox;
