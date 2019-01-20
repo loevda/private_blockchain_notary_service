@@ -11,6 +11,9 @@ class Mempool {
     }
 
     addRequestValidation(walletAddress) {
+        if (this.pool[walletAddress] !== undefined)
+            throw new MempoolError("You already have a pending authorization " +
+                "to post a star in the mempool", 409);
         const self = this;
         const requestTimeStamp = new Date().getTime();
         if (this.timeoutRequests[walletAddress] === undefined) {
