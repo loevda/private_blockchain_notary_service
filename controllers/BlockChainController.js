@@ -59,9 +59,10 @@ class BlockChainController {
         this.app.post("/block/", [
             // value must exist
             body('address', 'Missing payload {address}.').exists(),
-            body('address', '{address} must be a string.').isString(),
             body('star', 'Missing payload {star}').exists(),
-            // value must be at least 3 chars long
+            body('star.dec', 'Missing payload {star.dec}').exists(),
+            body('star.ra', 'Missing payload {star.dec}').exists(),
+            body('star.story', 'Missing payload {star.story}').exists(),
         ], async (req, res, next) => {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -72,7 +73,7 @@ class BlockChainController {
                         let isValid = await this.mempool.verifyAddressRequest(req.body.address);
                         if (isValid) {
                             //then post to the blockchain
-                            const star = JSON.parse(req.body.star);
+                            const star = req.body.star;
                             star.story = Buffer.from(star.story).toString('hex');
                             const body = {
                                 address: req.body.address,
@@ -96,3 +97,5 @@ class BlockChainController {
 }
 
 module.exports = (app, mempool) => { return new BlockChainController(app, mempool);}
+
+
